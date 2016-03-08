@@ -14,7 +14,7 @@ class MinecraftIrcBot
     @name = options[:name]
     @pipe = options[:pipe]
     say "NICK #{@name}"
-    say "USER #{@name} #{@name} #{@name} :#{@name}\r\n" #not sure if this modification was necessary; was troubleshooting problem with it failing to join the channel; fixed in line # 55.
+    say "USER #{@name} #{@name} #{@name} :#{@name}\r\n" #not sure if this modification was necessary; was troubleshooting problem with it failing to join the channel; fixed in line # 56.
     say "JOIN ##{@channel}"
   end
 
@@ -51,7 +51,8 @@ class MinecraftIrcBot
         when /^:(.+?)!.+?@.+?\sPRIVMSG\s.+?\s:(.+)$/i
           say_to_minecraft("<#{$1}> #{$2}")
         end
-        # the below 4 lines were added to make it wait to join the channel until after the IRC server is ready.
+        # The below 4 lines were added to make it wait to join the channel until after the IRC server is ready.
+        # This fix was borrowed from line 78 of https://github.com/nerdinand/ruby-irc-bot/commit/d0fd2993a293d91a07261265ae9d343fba8cf56d#diff-d91d2f33156e2aee7144289c76bb8404R78
         if !@joined && msg.include?("MODE #{@name}")
           say "JOIN ##{@channel}"
           @joined = true
