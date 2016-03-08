@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# Original script from https://www.johnhawthorn.com/2011/06/minecraft-to-irc-bridge/
+# Modified on 2016-03-08 for https://github.com/doubledave/mc-irc-bridge
 
 require 'socket'
 require 'uri'
@@ -12,7 +14,7 @@ class MinecraftIrcBot
     @name = options[:name]
     @pipe = options[:pipe]
     say "NICK #{@name}"
-    say "USER #{@name} 0 * #{@name}"
+    say "USER #{@name} #{@name} #{@name} :#{@name}\r\n" #not sure if this modification was necessary; was troubleshooting problem with it failing to join the channel; fixed in line # 55.
     say "JOIN ##{@channel}"
   end
 
@@ -49,6 +51,12 @@ class MinecraftIrcBot
         when /^:(.+?)!.+?@.+?\sPRIVMSG\s.+?\s:(.+)$/i
           say_to_minecraft("<#{$1}> #{$2}")
         end
+        # the below 4 lines were added to make it wait to join the channel until after the IRC server is ready.
+        if !@joined && msg.include?("MODE #{@name}")
+          say "JOIN ##{@channel}"
+          @joined = true
+        end
+
       end
 
       if read.include? @mclog
@@ -57,10 +65,10 @@ class MinecraftIrcBot
         case msg.strip
         when /^\[INFO\] ([a-z0-9]*) lost connection/i
           say_to_chan("#{$1} has left")
-        when /^\[INFO\] ([a-z0-9]*) \[[^\]]*\] logged in/i
+        when /^\[INFO\] ([a-z0-9]*)\[[^\]]*\] logged in/i # modified to work with minecraft server version I've been using
           say_to_chan("#{$1} has joined")
         when /^\[INFO\] <([a-z0-9]*)> (.*)$/i
-          say_to_chan("<#{$1}> #{$2}")
+          say_to_chan("<#{$1}> #{$2}"[0..-4]) # modified to strip last 3 (garbage) characters
         end
       end
     end
@@ -122,3 +130,5 @@ def run
 end
 
 run
+
+
