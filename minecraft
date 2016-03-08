@@ -1,6 +1,7 @@
 #!/bin/bash
 # /etc/init.d/minecraft
 # version 0.4.2 2016-02-09 (YYYY-MM-DD)
+# customized on 2016-03-08 for https://github.com/doubledave/mc-irc-bridge
 #
 ### BEGIN INIT INFO
 # Provides:   minecraft
@@ -15,17 +16,17 @@
 ### END INIT INFO
 
 #Settings
-SERVICE='minecraft_server.jar'
+SERVICE='craftbukkit-1.6.4-R2.0.jar'
 SCREENNAME='minecraft_server'
 OPTIONS='nogui'
-USERNAME='minecraft'
+USERNAME='david'
 WORLD='world'
-MCPATH='/home/minecraft'
-BACKUPPATH='/media/remote.share/minecraft.backup'
-MAXHEAP=2048
+MCPATH='/home/david/mcserver'
+BACKUPPATH='/home/david/mcbackup'
+MAXHEAP=1792
 MINHEAP=1024
 HISTORY=1024
-CPU_COUNT=1
+CPU_COUNT=2
 INVOCATION="java -Xmx${MAXHEAP}M -Xms${MINHEAP}M -XX:+UseConcMarkSweepGC \
 -XX:+CMSIncrementalPacing -XX:ParallelGCThreads=$CPU_COUNT -XX:+AggressiveOpts \
 -jar $SERVICE $OPTIONS" 
