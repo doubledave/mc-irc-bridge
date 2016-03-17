@@ -4,6 +4,12 @@
 
 require 'socket'
 require 'uri'
+require 'fileutils' #03/16/2016 upon user login create a file and not care if it
+                    #           already exists.  Existence of file will indicate
+                    #           to the backup utility that  during the scheduled
+                    #           backup, it may proceed; non-existance of it will
+                    #           indicate that no one has logged in  and there is
+                    #           no reason to perform the backup at that time.
 
 class MinecraftIrcBot
   def initialize(options)
@@ -14,7 +20,7 @@ class MinecraftIrcBot
     @name = options[:name]
     @pipe = options[:pipe]
     say "NICK #{@name}"
-    say "USER #{@name} #{@name} #{@name} :#{@name}\r\n" #not sure if this modification was necessary; was troubleshooting problem with it failing to join the channel; fixed in line # 56.
+    say "USER #{@name} #{@name} #{@name} :#{@name}\r\n" #not sure if this modification was necessary; was troubleshooting problem with it failing to join the channel; fixed in line # 62.
     say "JOIN ##{@channel}"
   end
 
@@ -68,6 +74,7 @@ class MinecraftIrcBot
           say_to_chan("#{$1} has left")
         when /^\[INFO\] ([a-z0-9]*)\[[^\]]*\] logged in/i # modified to work with minecraft server version I've been using
           say_to_chan("#{$1} has joined")
+          FileUtils.touch('maybackup.0')      # file to be removed upon successful backup
         when /^\[INFO\] <([a-z0-9]*)> (.*)$/i
           say_to_chan("<#{$1}> #{$2}"[0..-4]) # modified to strip last 3 (garbage) characters
         end
