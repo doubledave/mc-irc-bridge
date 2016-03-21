@@ -16,7 +16,7 @@
 ### END INIT INFO
 
 #Settings
-SERVICE='craftbukkit-1.6.4-R2.0.jar'
+SERVICE='spigot-1.9.jar'
 SCREENNAME='minecraft_server'
 OPTIONS='nogui'
 USERNAME='david'
