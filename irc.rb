@@ -16,7 +16,7 @@ class MinecraftIrcBot
     uri = URI.parse("irc://#{options[:server]}")
     @channel = options[:channel]
     @socket = TCPSocket.open(uri.host, uri.port || 6667)
-    @mclog = IO.popen("tail -f -n0 '#{options[:log]}'", "r")
+    @mclog = IO.popen("tail -F -n0 '#{options[:log]}'", "r")
     @name = options[:name]
     @pipe = options[:pipe]
     say "NICK #{@name}"
