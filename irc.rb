@@ -75,7 +75,7 @@ class MinecraftIrcBot
         when /\[(.*?)\] \[Server thread\/INFO\]: ([a-z0-9]*)\[[^\]]*\] logged in/i # modified to work with minecraft server version I've been using
           say_to_chan("#{$2} has joined at #{$1}")
           FileUtils.touch('maybackup.0')      # file to be removed upon successful backup
-        when /\[(.*?)\] \[Async Chat Thread - #([0-9]*)\/INFO\]: <([a-z0-9]*)> (.*)$/i
+        when /\[(.*?)\] \[Async Chat Thread - #([0-9]*)\/INFO\]: \[(.*?)\]<([a-z0-9]*)> (.*)$/i
           say_to_chan("<#{$3}> #{$4}"[0..-4]) # modified to strip last 3 (garbage) characters
         end
       end
@@ -138,5 +138,3 @@ def run
 end
 
 run
-
-
